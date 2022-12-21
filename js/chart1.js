@@ -1,8 +1,6 @@
 async function draw() {
   // Access data
   const pathToCSV = './../data/temperature_daily.csv'
-  //   const pathToCSV = './../data/temp_small.csv'
-  // wait until data is read and processed.
   // TODO : add error handling
   const dataset = await d3.csv(pathToCSV)
 
@@ -13,12 +11,9 @@ async function draw() {
     d.dd = dateParser(d.date)
   })
   dataset.forEach((d) => {
-    // d.day = d3.timeDay(d.dd).toLocaleString('zh-HK', { day: 'numeric' })
     d.day = d3.timeDay(d.dd).getDate()
     d.month = d3.timeMonth(d.dd).toLocaleString('zh-HK', { month: 'short' })
-    // d.month = d3.timeMonth(d.dd)
     d.year = d3.timeYear(d.dd).toLocaleString('zh-HK', { year: 'numeric' })
-    // d.year = d3.timeYear(d.dd)
   })
 
   const globallyLowestTemp = d3.min(dataset, (d) => +d.min_temperature)
@@ -365,7 +360,6 @@ async function draw() {
   minMaxButton.on('change', function (d) {
     selectedOption = d3.select(this).property('value')
     selectedOptionIndex = options[selectedOption]
-    // console.log(selectedOptionIndex)
     drawChart(selectedOptionIndex, multipleShow)
   })
 
@@ -373,8 +367,5 @@ async function draw() {
     multipleShow = !multipleShow
     drawChart(selectedOptionIndex, multipleShow)
   })
-
-  //   const mutipleShowButton = d3.select('#mutipleShowButton')
-  //   d3.select("#buttonSize").on("input", changeSize )
 }
 draw()
