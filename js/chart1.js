@@ -1,7 +1,7 @@
 async function draw() {
   // Access data
-  //   const pathToCSV = './../data/temperature_daily.csv'
-  const pathToCSV = './../data/temp_small.csv'
+  const pathToCSV = './../data/temperature_daily.csv'
+  //   const pathToCSV = './../data/temp_small.csv'
   // wait until data is read and processed.
   // TODO : add error handling
   const dataset = await d3.csv(pathToCSV)
@@ -13,36 +13,44 @@ async function draw() {
     d.dd = dateParser(d.date)
   })
   dataset.forEach((d) => {
+    // d.day = d3.timeDay(d.dd).toLocaleString('zh-HK', { day: 'numeric' })
+    d.day = d3.timeDay(d.dd).getDate()
     d.month = d3.timeMonth(d.dd).toLocaleString('zh-HK', { month: 'short' })
     // d.month = d3.timeMonth(d.dd)
     d.year = d3.timeYear(d.dd).toLocaleString('zh-HK', { year: 'numeric' })
     // d.year = d3.timeYear(d.dd)
   })
 
-  aggData = Array.from(d3.group(dataset, (d) => d.month + ':' + d.year)).map(
-    (d) => {
-      return {
-        month: d[1][0].month, // ugly?
-        year: d[1][0].year,
-        min_temperature: d3.mean(d[1].map((d) => +d.min_temperature)),
-        max_temperature: d3.mean(d[1].map((d) => +d.max_temperature)),
-      }
-    },
+  const globallyLowestTemp = d3.min(dataset, (d) => +d.min_temperature)
+  const globallyHighestTemp = d3.max(dataset, (d) => +d.max_temperature)
+
+  const nestedData = Array.from(
+    d3.group(dataset, (d) => d.month + ':' + d.year),
   )
+  aggData = nestedData.map((d) => {
+    return {
+      month: d[1][0].month, // ugly?
+      year: d[1][0].year,
+      min_temperature: d3.mean(d[1].map((d) => +d.min_temperature)),
+      max_temperature: d3.mean(d[1].map((d) => +d.max_temperature)),
+    }
+  })
+
   const temperatureMinAccessor = (d) => +d.min_temperature
   const temperatureMaxAccessor = (d) => +d.max_temperature
+  const dayAccessor = (d) => d.day
   const monthAccessor = (d) => d.month
   const yearAccessor = (d) => d.year
 
-  const width = 600
+  const width = 550
   let dimensions = {
     width: width,
     height: width,
     margin: {
-      top: 60,
-      right: 40,
-      bottom: 40,
-      left: 40,
+      top: 30,
+      right: 30,
+      bottom: 10,
+      left: 30,
     },
   }
   dimensions.boundedWidth =
@@ -89,9 +97,11 @@ async function draw() {
   const yAxisGenerator = d3.axisLeft().scale(yScale)
 
   colorMaxTempUpper = '#E61C25'
-  colorMaxTempLower = '#0C9BB1'
-  colorMinTempUpper = '#E61C25'
+  colorMaxTempLower = '#25928C'
+  colorMinTempUpper = '#FCE556'
   colorMinTempLower = '#0C9BB1'
+  colorMaxTempLine = '#292825'
+  colorMinTempLine = '#1a4ffe'
 
   const temperatureMaxColorScale = d3
     .scaleLinear()
@@ -102,7 +112,7 @@ async function draw() {
   const temperatureMinColorScale = d3
     .scaleLinear()
     .domain(d3.extent(aggData, temperatureMinAccessor))
-    .range([colorMinTempLower, colorMaxTempUpper])
+    .range([colorMinTempLower, colorMinTempUpper])
   const [minAvgMin, maxAvgMin] = d3.extent(aggData, temperatureMinAccessor)
 
   const temperatureColorScale = [
@@ -115,23 +125,36 @@ async function draw() {
   ]
   const temperatureAccessor = [temperatureMaxAccessor, temperatureMinAccessor]
 
-  //Drawing
+  // TODO Here is bad design. Duplicate of Gradient. Cannot update gradient by parameter. Probably this is the characteristics of gradeient 12/21
+  const legendGradientMaxId = 'legend-gradient-max'
+  const legendGradientMinId = 'legend-gradient-min'
+  const defs = wrapper.append('defs')
+  let gradientMax = defs
+    .append('linearGradient')
+    .attr('id', legendGradientMaxId)
+    .selectAll('stop')
+    .data(temperatureMaxColorScale.range())
+    .enter()
+    .append('stop')
+    .attr('stop-color', (d) => d)
+    .attr('offset', (d, i) => `${i * 100}%`)
 
-  const drawChart = (option) => {
+  let gradientMin = defs
+    .append('linearGradient')
+    .attr('id', legendGradientMinId)
+    .selectAll('stop')
+    .data(temperatureMinColorScale.range())
+    .enter()
+    .append('stop')
+    .attr('stop-color', (d) => d)
+    .attr('offset', (d, i) => `${i * 100}%`)
+
+  //Drawing
+  const drawChart = (selectedOptionIndex, multipleShow) => {
     const legendHeight = 140
     const legendWidth = 16
-    const defs = wrapper.append('defs')
-    const legendGradientId = 'legend-gradient'
-    const gradient = defs
-      .append('linearGradient')
-      .attr('id', 'legend-gradient')
-      .selectAll('stop')
-      .data(temperatureColorScale[selectedOptionIndex].range())
-      .enter()
-      .append('stop')
-      .attr('stop-color', (d) => d)
-      .attr('offset', (d, i) => `${i * 100}%`)
 
+    // TODO Better move styles to CSS file.
     var tooltip = d3
       .select('#wrapper')
       .append('div')
@@ -140,7 +163,7 @@ async function draw() {
       .style('background-color', 'white')
       .style('border', 'solid')
       .style('border-width', '1px')
-      .style('border-radius', '2px')
+      .style('border-radius', '8px')
       .style('padding', '3px')
 
     // TODO Why ()=>{} do not work here?
@@ -199,7 +222,12 @@ async function draw() {
       ) // translate half
       .attr('height', legendWidth)
       .attr('width', legendHeight)
-      .style('fill', `url(#${legendGradientId})`)
+      .style(
+        'fill',
+        `url(#${
+          selectedOptionIndex == 0 ? legendGradientMaxId : legendGradientMinId
+        })`,
+      )
 
     const legendValueTop = legendGroup
       .append('text')
@@ -221,7 +249,9 @@ async function draw() {
       .data(aggData)
       .enter()
       .append('rect')
-      .attr('x', (d) => xScale(d.month))
+      .attr('x', (d) => {
+        return xScale(d.month)
+      })
       .attr('y', (d) => yScale(d.year))
       .attr('rx', 4)
       .attr('ry', 4)
@@ -238,18 +268,89 @@ async function draw() {
       .on('mouseover', mouseover)
       .on('mousemove', mousemove)
       .on('mouseleave', mouseleave)
+
+    if (multipleShow) {
+      drawMultiple()
+    }
+
+    function drawMultiple() {
+      let xScaleMultiple = d3
+        .scaleLinear()
+        .domain([1, 31]) // Always from 1-31 even though Feb (end with 28/29)
+        .range([
+          xScale.bandwidth() / 20,
+          xScale.bandwidth() - xScale.bandwidth() / 20,
+        ]) // Padding
+      let yScaleMultiple = d3
+        .scaleLinear()
+        .domain([globallyLowestTemp, globallyHighestTemp])
+        .range([
+          yScale.bandwidth() - yScale.bandwidth() / 20,
+          yScale.bandwidth() / 20,
+        ]) // padding
+
+      const lineGeneratorMaxTemp = d3
+        .line()
+        .x((d) => xScaleMultiple(dayAccessor(d)))
+        .y((d) => yScaleMultiple(temperatureMaxAccessor(d)))
+
+      const lineGeneratorMinTemp = d3
+        .line()
+        .x((d) => xScaleMultiple(dayAccessor(d)))
+        .y((d) => yScaleMultiple(temperatureMinAccessor(d)))
+
+      const smallMultiples = bounds
+        .append('g')
+        .selectAll('smallMultiples')
+        .data(nestedData)
+        .enter()
+
+      const smallMultiplesMax = smallMultiples
+        .append('path')
+        .attr('fill', 'none')
+        .attr('stroke', colorMaxTempLine)
+        .attr('stroke-width', 1)
+        .attr('d', (d) => lineGeneratorMaxTemp(d[1]))
+        .attr(
+          'transform',
+          (d) =>
+            `translate(${xScale(monthAccessor(d[1][0]))}, ${yScale(
+              yearAccessor(d[1][0]),
+            )})`,
+        ) // first item for each year and month group represent year and month
+
+      const smallMultiplesMin = smallMultiples
+        .append('path')
+        .attr('fill', 'none')
+        .attr('stroke', colorMinTempLine)
+        .attr('stroke-width', 1)
+        .attr('d', (d) => lineGeneratorMinTemp(d[1]))
+        .attr(
+          'transform',
+          (d) =>
+            `translate(${xScale(monthAccessor(d[1][0]))}, ${yScale(
+              yearAccessor(d[1][0]),
+            )})`,
+        ) // first item for each year and month group represent year and month
+    }
   }
 
   let selectedOptionIndex = 0
-  drawChart(selectedOptionIndex)
+  let multipleShow = false
+  drawChart(selectedOptionIndex, multipleShow)
 
   const options = {
     'Max Temperature': 0,
     'Min Temperature': 1,
   }
 
-  const dropdownButton = d3.select('#button').append('select')
-  dropdownButton
+  const showMultiple = {
+    'No Line Chart': false,
+    'Show Line Chart': true,
+  }
+
+  const minMaxButton = d3.select('#minMaxButton').append('select')
+  minMaxButton
     .selectAll('myOptions')
     .data(Object.keys(options))
     .enter()
@@ -261,11 +362,19 @@ async function draw() {
       return d
     })
   // TODO write subtitle and change with the button action
-  dropdownButton.on('change', function (d) {
+  minMaxButton.on('change', function (d) {
     selectedOption = d3.select(this).property('value')
     selectedOptionIndex = options[selectedOption]
     // console.log(selectedOptionIndex)
-    drawChart(selectedOptionIndex)
+    drawChart(selectedOptionIndex, multipleShow)
   })
+
+  d3.select('#smallMultiple').on('click', function (d) {
+    multipleShow = !multipleShow
+    drawChart(selectedOptionIndex, multipleShow)
+  })
+
+  //   const mutipleShowButton = d3.select('#mutipleShowButton')
+  //   d3.select("#buttonSize").on("input", changeSize )
 }
 draw()
