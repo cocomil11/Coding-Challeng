@@ -52,8 +52,6 @@ async function draw() {
     dimensions.width - dimensions.margin.left - dimensions.margin.right
   dimensions.boundedHeight =
     dimensions.height - dimensions.margin.top - dimensions.margin.bottom
-  dimensions.boundedRadius =
-    dimensions.radius - (dimensions.margin.left + dimensions.margin.right) / 2
 
   const wrapper = d3
     .select('#wrapper')
