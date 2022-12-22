@@ -3,16 +3,36 @@
 <html lang="en">
   <head>
     <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+
     <script src="https://unpkg.com/d3@7.7.0/dist/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
 
     <title>Coding Challeng</title>
   </head>
 
   <body>
-    <h2 class="title">
-      CSE Dept. Co-authorship
-    </h2>
+    <div class="header__flex">
+      <h1 class="title">
+        HKUST Coauthorship
+      </h1>
+
+      <fieldset class="deptOptions">
+        <legend>Select Depts</legend>
+        <input type="checkbox" name="dept" value="CSE" checked />
+        CSE
+        <input type="checkbox" name="dept" value="MATH" />
+        MATH
+        <input type="checkbox" name="dept" value="ECE" />
+        ECE
+        <input type="checkbox" name="dept" value="CIVL" />
+        CIVL
+        <input type="checkbox" name="dept" value="CHEM" />
+        CHEM
+      </fieldset>
+    </div>
     <div id="wrapper" class="wrapper"></div>
+
     <script src="./js/chart2.js"></script>
   </body>
 </html>
