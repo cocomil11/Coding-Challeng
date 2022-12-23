@@ -279,7 +279,6 @@ export const networkGraph = (
       }px)`,
     )
 
-  // TODO avoid hard cord
   const link = nodeLinkGraph
     .append('g')
     .attr('stroke', linkStroke)
@@ -306,13 +305,6 @@ export const networkGraph = (
     .select(wrapperID)
     .append('div')
     .attr('class', 'node-graph-tooltip')
-
-    // .style(
-    //   'transform',
-    //   `translate(${
-    //     dimensions.margin.left - dimensions.boundedWidth / 2 + 50
-    //   }px, ${dimensions.margin.top + dimensions.boundedHeight / 2}px)`,
-    // )
     .style(
       'transform',
       `translate(${dimensions.margin.left + dimensions.boundedWidth / 10}px, ${
