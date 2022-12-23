@@ -2,47 +2,16 @@
   font-family: "Inter var";
   src: url("./../fonts/Inter.var.woff2");
 }
-a:link {
-  text-decoration: none;
-}
-a text{
-  color: #34495e;
-}
 
-a:hover {
-  text-decoration: underline;
-}
-
-a:active {
-  text-decoration: underline;
-}
-.header__flex {
-  display: flex;
-  height:40px;
-  align-items: center;
-  margin-right: 4rem;
-}
 .pageLink {
   justify-content: space-around;
-  /* padding-left: 3rem; */
   color: #34495e;
 
 }
 .frontTitle{
-  /* width: 10rem; */
   text-align: center;
 }
-.pageLinks{
-  justify-content: space-between;
-  margin-right: 0.5rem;
-  display: flex;
-  width:10rem;
-  align-items: center;
-  margin-top: 3rem;
-}
-.deptOptions {
-  margin-left: 10rem;
-}
+
 .container {
   display: flex;
   display: flex;
@@ -61,7 +30,6 @@ body {
 }
 
 .wrapper {
-  margin-top: 2rem;
   position: relative;
 }
 
@@ -97,8 +65,6 @@ svg text {
   position: absolute;
   top: 0;
   left: 0;
-  width: 8em;
-  height: 3em;
   padding: 0.6em 1em;
   background: #fff;
   text-align: center;
@@ -107,43 +73,24 @@ svg text {
   border: 1px solid #ddd;
   z-index: 10;
   pointer-events: none;
-}
-
-.node-graph-tooltip {
-  text-anchor: middle;
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  /* width: 8em; */
-  /* height: 2em; */
-  padding: 0.6em 0.6em;
-  background: #fff;
-  text-align: center;
-  line-height: 1.1em;
-  font-size: 0.5em;
-  border: 1px solid #ddd;
-  z-index: 10;
-  pointer-events: none;
+  border-width: 1px;
+  border-radius: 8px;
+  padding: 3px;
 }
 
 
-#matrix {
-  font-size: 8px;
-  text-anchor: start;
-  display: block;
-  white-space: nowrap;
-}
-#matrix text.active{
-  fill: red;
-}
-#node-link-graph circle.active{
-  fill: red;
-}
-#node-link-graph line.active{
-  stroke: red;
-
-}
 .legend text.label{
-  font-size:8px
+  font-size:8px;
+}
+
+.heatmapBlock{
+  rx: 4px;
+  ry: 4px;
+  opacity:0.8;
+  stroke: none;
+  stroke-width: 4;
+}
+.smallMultiple{
+  stroke-width:1;
+  fill:none;
 }
