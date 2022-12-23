@@ -1,6 +1,6 @@
 async function draw() {
   // Access data
-  const pathToCSV = './../data/temperature_daily.csv'
+  const pathToCSV = './data/temperature_daily.csv'
   // TODO : add error handling
   const dataset = await d3.csv(pathToCSV)
 

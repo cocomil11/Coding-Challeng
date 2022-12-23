@@ -1,0 +1,149 @@
+@font-face {
+  font-family: "Inter var";
+  src: url("./../fonts/Inter.var.woff2");
+}
+a:link {
+  text-decoration: none;
+}
+a text{
+  color: #34495e;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:active {
+  text-decoration: underline;
+}
+.header__flex {
+  display: flex;
+  height:40px;
+  align-items: center;
+  margin-right: 4rem;
+}
+.pageLink {
+  justify-content: space-around;
+  /* padding-left: 3rem; */
+  color: #34495e;
+
+}
+.frontTitle{
+  /* width: 10rem; */
+  text-align: center;
+}
+.pageLinks{
+  justify-content: space-between;
+  margin-right: 0.5rem;
+  display: flex;
+  width:10rem;
+  align-items: center;
+  margin-top: 3rem;
+}
+.deptOptions {
+  margin-left: 10rem;
+}
+.container {
+  display: flex;
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2em 2em;
+  font-family: "Inter var", sans-serif;
+  font-size: 16px;
+  color: #34495e;
+  background: #f8f9fa;
+}
+
+.wrapper {
+  margin-top: 2rem;
+  position: relative;
+}
+
+svg {
+  overflow: visible;
+}
+
+svg text {
+  user-select: none;
+}
+
+.title {
+  position: relative;
+  /* margin-top: 1.3em; */
+  margin-bottom: 0.3em;
+  line-height: 1.2em;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  font-feature-settings: "tnum" 1;
+  letter-spacing: 0.02em;
+}
+
+.legend-value {
+  font-size: 10px;
+
+}
+
+.tooltip {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8em;
+  height: 3em;
+  padding: 0.6em 1em;
+  background: #fff;
+  text-align: center;
+  line-height: 1.4em;
+  font-size: 0.9em;
+  border: 1px solid #ddd;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.node-graph-tooltip {
+  text-anchor: middle;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* width: 8em; */
+  /* height: 2em; */
+  padding: 0.6em 0.6em;
+  background: #fff;
+  text-align: center;
+  line-height: 1.1em;
+  font-size: 0.5em;
+  border: 1px solid #ddd;
+  z-index: 10;
+  pointer-events: none;
+}
+
+
+#matrix {
+  font-size: 8px;
+  text-anchor: start;
+  display: block;
+  white-space: nowrap;
+}
+#matrix text.active{
+  fill: red;
+}
+#node-link-graph circle.active{
+  fill: red;
+}
+#node-link-graph line.active{
+  stroke: red;
+
+}
+.legend text.label{
+  font-size:8px
+}

@@ -1,5 +1,5 @@
 async function draw(checkedDept) {
-  const pathJson = './../data/HKUST_coauthor_graph.json'
+  const pathJson = './data/HKUST_coauthor_graph.json'
   const { nodes: allnodes, edges: alledges } = await d3.json(
     pathJson,
     d3.autoType,
@@ -12,7 +12,6 @@ async function draw(checkedDept) {
   const linkStrokeWidth = 1.5
 
   const targetDepts = new Set(checkedDept)
-  // const targetDepts = new Set(['CSE', 'LIFS'])
 
   const accessorNodeId = (d) => d.id
   const accessorNodeDept = (d) => d.dept
