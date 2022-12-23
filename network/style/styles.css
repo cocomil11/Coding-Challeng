@@ -92,22 +92,7 @@ svg text {
 
 }
 
-.tooltip {
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 8em;
-  height: 3em;
-  padding: 0.6em 1em;
-  background: #fff;
-  text-align: center;
-  line-height: 1.4em;
-  font-size: 0.9em;
-  border: 1px solid #ddd;
-  z-index: 10;
-  pointer-events: none;
-}
+
 
 .node-graph-tooltip {
   text-anchor: middle;
@@ -115,8 +100,6 @@ svg text {
   position: absolute;
   top: 0;
   left: 0;
-  /* width: 8em; */
-  /* height: 2em; */
   padding: 0.6em 0.6em;
   background: #fff;
   text-align: center;
@@ -125,6 +108,10 @@ svg text {
   border: 1px solid #ddd;
   z-index: 10;
   pointer-events: none;
+  white-space: nowrap;
+  border: solid;
+  border-width:0.5px;
+  border-radius: 8px;
 }
 
 
@@ -135,13 +122,13 @@ svg text {
   white-space: nowrap;
 }
 #matrix text.active{
-  fill: red;
+  fill: rgb(247, 110, 110);
 }
 #node-link-graph circle.active{
-  fill: red;
+  fill: rgb(247, 110, 110);;
 }
 #node-link-graph line.active{
-  stroke: red;
+  stroke: rgb(247, 110, 110);;
 
 }
 .legend text.label{
